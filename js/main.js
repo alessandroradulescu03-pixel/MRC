@@ -76,63 +76,80 @@ if (form) {
 
 // ===== VISTA NEGOZIO (pagina separata, senza ricaricare) =====
 
-function apriNegozio(event) {
+var posizioneHome = 0;
+
+function mostraNegozio() {
     var negozio = document.getElementById('negozio');
     if (!negozio) return;
 
-    if (event) event.preventDefault();
+    // Ricorda dove eri nella home, per tornarci con la freccia indietro
+    if (!document.body.classList.contains('vista-negozio')) {
+        posizioneHome = window.pageYOffset || 0;
+    }
+
+    // Nasconde la home (tranne negozio e carrello)
+    document.querySelectorAll('main > *').forEach(function (el) {
+        if (el.id === 'negozio' || el.id === 'cartBackdrop' || el.id === 'cartDrawer') return;
+        el.style.display = 'none';
+    });
 
     negozio.hidden = false;
     negozio.removeAttribute('hidden');
+    negozio.style.display = 'block';
+    negozio.style.paddingTop = '120px';
+    negozio.style.minHeight = '100vh';
     document.body.classList.add('vista-negozio');
 
-    // Crea il pulsante "Torna al sito" una sola volta
-    if (!document.getElementById('tornaHome')) {
-        var wrap = negozio.querySelector('.w');
-        var btn = document.createElement('a');
-        btn.id = 'tornaHome';
-        btn.className = 'btn o torna-home';
-        btn.href = '#top';
-        btn.textContent = '← Torna al sito';
-        btn.addEventListener('click', chiudiNegozio);
-        wrap.insertBefore(btn, wrap.firstChild);
-    }
-
-    // Chiude il menu mobile
     if (nv) nv.classList.remove('open');
     if (mb) {
         mb.setAttribute('aria-expanded', 'false');
         mb.textContent = '☰';
     }
 
-    // Aggiorna l'indirizzo senza ricaricare la pagina
-    if (window.history && window.history.replaceState) {
-        window.history.replaceState(null, '', '#negozio');
-    }
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
-function chiudiNegozio(event) {
+function mostraHome() {
     var negozio = document.getElementById('negozio');
+
+    document.querySelectorAll('main > *').forEach(function (el) {
+        if (el.id === 'negozio' || el.id === 'cartBackdrop' || el.id === 'cartDrawer') return;
+        el.style.display = '';
+    });
+
+    if (negozio) {
+        negozio.hidden = true;
+        negozio.style.display = 'none';
+    }
+    document.body.classList.remove('vista-negozio');
+}
+
+// Apertura: aggiunge un passaggio alla cronologia, così la freccia indietro funziona
+function apriNegozio(event) {
     if (event) event.preventDefault();
 
-    if (negozio) negozio.hidden = true;
-    document.body.classList.remove('vista-negozio');
-
-    if (window.history && window.history.replaceState) {
-        window.history.replaceState(null, '', '#top');
+    if (window.location.hash !== '#negozio') {
+        window.history.pushState({ vista: 'negozio' }, '', '#negozio');
     }
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    mostraNegozio();
 }
+
+// Frecce avanti/indietro del browser
+window.addEventListener('popstate', function () {
+    if (window.location.hash === '#negozio') {
+        mostraNegozio();
+    } else {
+        mostraHome();
+        window.scrollTo({ top: posizioneHome, behavior: 'instant' });
+    }
+});
 
 // "Negozio" nel menu e "COMPONENTI AFTERMARKET" nella galleria
 document.querySelectorAll('a[href="#negozio"]').forEach(function (link) {
     link.addEventListener('click', apriNegozio);
 });
 
-// Dal negozio, i link del menu riportano alla home e poi alla sezione scelta
+// Dal negozio, i link del menu portano alla home sulla sezione scelta
 document.querySelectorAll('nav a, .logo, header .btn').forEach(function (link) {
     var href = link.getAttribute('href');
     if (!href || href === '#negozio' || href.charAt(0) !== '#') return;
@@ -141,7 +158,8 @@ document.querySelectorAll('nav a, .logo, header .btn').forEach(function (link) {
         if (!document.body.classList.contains('vista-negozio')) return;
 
         event.preventDefault();
-        chiudiNegozio();
+        mostraHome();
+        window.history.pushState(null, '', href);
 
         window.setTimeout(function () {
             var target = document.querySelector(href);
@@ -150,17 +168,59 @@ document.querySelectorAll('nav a, .logo, header .btn').forEach(function (link) {
     });
 });
 
-// Carrello dimostrativo
+// Carrello dimostrativo (salvato nel browser)
 (function () {
     var drawer = document.getElementById('cartDrawer');
     var backdrop = document.getElementById('cartBackdrop');
 
     if (!drawer || !backdrop) return;
 
+    var STORAGE_KEY = 'mrc_carrello_v1';
     var cart = {};
     var products = Array.prototype.slice.call(
         document.querySelectorAll('.product')
     );
+
+    // --- Salvataggio e ripristino ---
+
+    function saveCart() {
+        try {
+            var data = {};
+            Object.keys(cart).forEach(function (key) {
+                data[key] = cart[key].qty;
+            });
+            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch (e) {
+            // Archiviazione non disponibile (es. navigazione privata): il carrello resta solo in memoria
+        }
+    }
+
+    function loadCart() {
+        try {
+            var raw = window.localStorage.getItem(STORAGE_KEY);
+            if (!raw) return;
+
+            var data = JSON.parse(raw);
+
+            Object.keys(data).forEach(function (id) {
+                var qty = parseInt(data[id], 10);
+                var element = products.filter(function (p) {
+                    return p.dataset.id === id;
+                })[0];
+
+                // Nome e prezzo si leggono sempre dalla pagina, si salva solo la quantità
+                if (element && qty > 0) {
+                    cart[id] = {
+                        name: element.dataset.name,
+                        price: Number(element.dataset.price),
+                        qty: qty
+                    };
+                }
+            });
+        } catch (e) {
+            cart = {};
+        }
+    }
 
     function money(amount) {
         return new Intl.NumberFormat('it-IT', {
@@ -248,6 +308,7 @@ document.querySelectorAll('nav a, .logo, header .btn').forEach(function (link) {
                 };
             }
 
+            saveCart();
             renderCart();
             openCart();
         });
@@ -285,6 +346,7 @@ document.querySelectorAll('nav a, .logo, header .btn').forEach(function (link) {
                 delete cart[id];
             }
 
+            saveCart();
             renderCart();
         });
     }
@@ -333,9 +395,14 @@ document.querySelectorAll('nav a, .logo, header .btn').forEach(function (link) {
                 '<br>Nessun ordine inviato e nessun pagamento richiesto.';
         });
     }
+
+    // All'avvio: ripristina il carrello salvato
+    loadCart();
+    renderCart();
 })();
 
-// Se la pagina viene aperta direttamente con #negozio nell'indirizzo
+// Apertura diretta con #negozio nell'indirizzo
 if (window.location.hash === '#negozio') {
-    apriNegozio();
+    window.history.replaceState({ vista: 'negozio' }, '', '#negozio');
+    mostraNegozio();
 }
