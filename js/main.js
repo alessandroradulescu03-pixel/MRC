@@ -30,3 +30,17 @@ document.getElementById('f').onsubmit=function(e){e.preventDefault();var d=new F
  document.querySelectorAll('.filter').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.filter').forEach(function(x){x.classList.toggle('active',x===b)});products.forEach(function(p){p.hidden=b.dataset.filter!=='all'&&p.dataset.category!==b.dataset.filter})})});
  document.getElementById('checkoutDemo').addEventListener('click',function(){var keys=Object.keys(cart),msg=document.getElementById('checkoutMessage');msg.hidden=false;if(!keys.length){msg.textContent='Il carrello è vuoto: aggiungi un prodotto prima di creare il riepilogo.';return}msg.innerHTML='<strong>Riepilogo dimostrativo</strong><br>'+keys.map(function(k){return cart[k].name+' × '+cart[k].qty}).join('<br>')+'<br><br><strong>Totale: '+money(keys.reduce(function(a,k){return a+cart[k].price*cart[k].qty},0))+'</strong><br>Nessun ordine inviato e nessun pagamento richiesto.'});
 })();
+
+
+// Il negozio si apre solo tramite il menu "Negozio" o il badge "Componenti aftermarket".
+document.addEventListener('click',function(e){
+ var trigger=e.target.closest('a[href="#negozio"]');
+ if(!trigger)return;
+ var shop=document.getElementById('negozio');
+ if(!shop)return;
+ e.preventDefault();
+ shop.hidden=false;
+ if(nv){nv.classList.remove('open');if(mb){mb.setAttribute('aria-expanded','false');mb.textContent='☰'}}
+ if(window.history&&window.history.replaceState)window.history.replaceState(null,'','#negozio');
+ requestAnimationFrame(function(){shop.scrollIntoView({behavior:'smooth',block:'start'})});
+});
