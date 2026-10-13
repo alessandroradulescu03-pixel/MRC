@@ -1,46 +1,299 @@
-var mb=document.getElementById('mb'),nv=document.getElementById('nv');
-mb.onclick=function(){var o=nv.classList.toggle('open');mb.setAttribute('aria-expanded',o);mb.textContent=o?'✕':'☰'};
-nv.querySelectorAll('a').forEach(function(a){a.onclick=function(){nv.classList.remove('open');mb.textContent='☰'}});
-document.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected',x===t)});document.getElementById('p0').hidden=t.dataset.t!=='0';document.getElementById('p1').hidden=t.dataset.t!=='1'}});
-var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.12});
-document.querySelectorAll('.rv').forEach(function(e){io.observe(e)});
-document.getElementById('f').onsubmit=function(e){e.preventDefault();var d=new FormData(e.target);var t='Ciao MRC, sono '+d.get('n')+'. Auto: '+(d.get('a')||'n.d.')+'. Mi serve: '+d.get('t')+'. '+(d.get('m')||'');window.open('https://wa.me/393497861240?text='+encodeURIComponent(t),'_blank')};
+var mb = document.getElementById('mb');
+var nv = document.getElementById('nv');
 
+// Menu mobile
+if (mb && nv) {
+    mb.addEventListener('click', function () {
+        var aperto = nv.classList.toggle('open');
+        mb.setAttribute('aria-expanded', aperto ? 'true' : 'false');
+        mb.textContent = aperto ? '✕' : '☰';
+    });
 
-// Demo store: cart is client-side only; no checkout or payment processing.
-(function(){
- var drawer=document.getElementById('cartDrawer'),backdrop=document.getElementById('cartBackdrop');
- if(!drawer)return;
- var cart={},products=[].slice.call(document.querySelectorAll('.product'));
- function money(n){return new Intl.NumberFormat('it-IT',{style:'currency',currency:'EUR'}).format(n)}
- function openCart(){drawer.classList.add('open');backdrop.classList.add('open');drawer.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
- function closeCart(){drawer.classList.remove('open');backdrop.classList.remove('open');drawer.setAttribute('aria-hidden','true');document.body.style.overflow=''}
- function render(){
-  var items=document.getElementById('cartItems'),keys=Object.keys(cart),count=keys.reduce(function(a,k){return a+cart[k].qty},0),total=keys.reduce(function(a,k){return a+cart[k].price*cart[k].qty},0);
-  document.querySelectorAll('.cart-count').forEach(function(e){e.textContent=count});
-  document.getElementById('cartTotal').textContent=money(total);
-  if(!keys.length){items.innerHTML='<p class="cart-empty">Il carrello è vuoto. Aggiungi un prodotto per iniziare.</p>';return}
-  items.innerHTML=keys.map(function(k){var p=cart[k];return '<div class="cart-line"><div><h4>'+p.name+'</h4><small>Prezzo unitario: '+money(p.price)+'</small><div class="cart-controls"><button data-action="minus" data-id="'+k+'" aria-label="Diminuisci quantità">−</button><span>'+p.qty+'</span><button data-action="plus" data-id="'+k+'" aria-label="Aumenta quantità">+</button></div></div><div><button class="cart-remove" data-action="remove" data-id="'+k+'" aria-label="Rimuovi prodotto">×</button><strong>'+money(p.price*p.qty)+'</strong></div></div>'}).join('');
- }
- document.querySelectorAll('.add-cart').forEach(function(b){b.addEventListener('click',function(){var el=b.closest('.product'),id=el.dataset.id;if(cart[id])cart[id].qty++;else cart[id]={name:el.dataset.name,price:Number(el.dataset.price),qty:1};render();openCart();})});
- document.querySelectorAll('.cart-open').forEach(function(b){b.addEventListener('click',openCart)});
- document.querySelector('.cart-close').addEventListener('click',closeCart);backdrop.addEventListener('click',closeCart);
- document.addEventListener('keydown',function(e){if(e.key==='Escape')closeCart()});
- document.getElementById('cartItems').addEventListener('click',function(e){var b=e.target.closest('button[data-action]');if(!b)return;var id=b.dataset.id,action=b.dataset.action;if(!cart[id])return;if(action==='plus')cart[id].qty++;if(action==='minus')cart[id].qty--;if(action==='remove'||cart[id].qty<1)delete cart[id];render()});
- document.querySelectorAll('.filter').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.filter').forEach(function(x){x.classList.toggle('active',x===b)});products.forEach(function(p){p.hidden=b.dataset.filter!=='all'&&p.dataset.category!==b.dataset.filter})})});
- document.getElementById('checkoutDemo').addEventListener('click',function(){var keys=Object.keys(cart),msg=document.getElementById('checkoutMessage');msg.hidden=false;if(!keys.length){msg.textContent='Il carrello è vuoto: aggiungi un prodotto prima di creare il riepilogo.';return}msg.innerHTML='<strong>Riepilogo dimostrativo</strong><br>'+keys.map(function(k){return cart[k].name+' × '+cart[k].qty}).join('<br>')+'<br><br><strong>Totale: '+money(keys.reduce(function(a,k){return a+cart[k].price*cart[k].qty},0))+'</strong><br>Nessun ordine inviato e nessun pagamento richiesto.'});
-})();
+    nv.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+            nv.classList.remove('open');
+            mb.setAttribute('aria-expanded', 'false');
+            mb.textContent = '☰';
+        });
+    });
+}
 
+// Schede
+document.querySelectorAll('.tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+        document.querySelectorAll('.tab').forEach(function (element) {
+            element.setAttribute('aria-selected', element === tab ? 'true' : 'false');
+        });
 
-// Il negozio si apre solo tramite il menu "Negozio" o il badge "Componenti aftermarket".
-document.addEventListener('click',function(e){
- var trigger=e.target.closest('a[href="#negozio"]');
- if(!trigger)return;
- var shop=document.getElementById('negozio');
- if(!shop)return;
- e.preventDefault();
- shop.hidden=false;
- if(nv){nv.classList.remove('open');if(mb){mb.setAttribute('aria-expanded','false');mb.textContent='☰'}}
- if(window.history&&window.history.replaceState)window.history.replaceState(null,'','#negozio');
- requestAnimationFrame(function(){shop.scrollIntoView({behavior:'smooth',block:'start'})});
+        var p0 = document.getElementById('p0');
+        var p1 = document.getElementById('p1');
+
+        if (p0) p0.hidden = tab.dataset.t !== '0';
+        if (p1) p1.hidden = tab.dataset.t !== '1';
+    });
 });
+
+// Animazioni delle sezioni
+if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('on');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.rv').forEach(function (element) {
+        observer.observe(element);
+    });
+} else {
+    document.querySelectorAll('.rv').forEach(function (element) {
+        element.classList.add('on');
+    });
+}
+
+// Modulo contatti: apre WhatsApp
+var form = document.getElementById('f');
+
+if (form) {
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        var data = new FormData(form);
+        var messaggio =
+            'Ciao MRC, sono ' + data.get('n') +
+            '. Auto: ' + (data.get('a') || 'n.d.') +
+            '. Mi serve: ' + data.get('t') +
+            '. ' + (data.get('m') || '');
+
+        window.open(
+            'https://wa.me/393497861240?text=' + encodeURIComponent(messaggio),
+            '_blank'
+        );
+    });
+}
+
+// Apertura del negozio esclusivamente tramite i link dedicati
+function apriNegozio(event) {
+    var negozio = document.getElementById('negozio');
+
+    if (!negozio) return;
+
+    event.preventDefault();
+
+    // Mostra la sezione del negozio
+    negozio.hidden = false;
+    negozio.removeAttribute('hidden');
+
+    // Chiude il menu mobile
+    if (nv) nv.classList.remove('open');
+
+    if (mb) {
+        mb.setAttribute('aria-expanded', 'false');
+        mb.textContent = '☰';
+    }
+
+    // Aggiorna l'indirizzo senza ricaricare la pagina
+    if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', '#negozio');
+    }
+
+    // Scorre fino al negozio dopo averlo reso visibile
+    window.requestAnimationFrame(function () {
+        negozio.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    });
+}
+
+// Gestisce sia "Negozio" nel menu sia "Componenti aftermarket"
+document.querySelectorAll('a[href="#negozio"]').forEach(function (link) {
+    link.addEventListener('click', apriNegozio);
+});
+
+// Carrello dimostrativo
+(function () {
+    var drawer = document.getElementById('cartDrawer');
+    var backdrop = document.getElementById('cartBackdrop');
+
+    if (!drawer || !backdrop) return;
+
+    var cart = {};
+    var products = Array.prototype.slice.call(
+        document.querySelectorAll('.product')
+    );
+
+    function money(amount) {
+        return new Intl.NumberFormat('it-IT', {
+            style: 'currency',
+            currency: 'EUR'
+        }).format(amount);
+    }
+
+    function openCart() {
+        drawer.classList.add('open');
+        backdrop.classList.add('open');
+        drawer.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeCart() {
+        drawer.classList.remove('open');
+        backdrop.classList.remove('open');
+        drawer.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    function renderCart() {
+        var items = document.getElementById('cartItems');
+        var keys = Object.keys(cart);
+
+        var count = keys.reduce(function (total, key) {
+            return total + cart[key].qty;
+        }, 0);
+
+        var total = keys.reduce(function (sum, key) {
+            return sum + cart[key].price * cart[key].qty;
+        }, 0);
+
+        document.querySelectorAll('.cart-count').forEach(function (element) {
+            element.textContent = count;
+        });
+
+        var cartTotal = document.getElementById('cartTotal');
+        if (cartTotal) cartTotal.textContent = money(total);
+
+        if (!items) return;
+
+        if (!keys.length) {
+            items.innerHTML =
+                '<p class="cart-empty">Il carrello è vuoto. Aggiungi un prodotto per iniziare.</p>';
+            return;
+        }
+
+        items.innerHTML = keys.map(function (key) {
+            var product = cart[key];
+
+            return '<div class="cart-line">' +
+                '<div>' +
+                    '<h4>' + product.name + '</h4>' +
+                    '<small>Prezzo unitario: ' + money(product.price) + '</small>' +
+                    '<div class="cart-controls">' +
+                        '<button data-action="minus" data-id="' + key + '" aria-label="Diminuisci quantità">−</button>' +
+                        '<span>' + product.qty + '</span>' +
+                        '<button data-action="plus" data-id="' + key + '" aria-label="Aumenta quantità">+</button>' +
+                    '</div>' +
+                '</div>' +
+                '<div>' +
+                    '<button class="cart-remove" data-action="remove" data-id="' + key + '" aria-label="Rimuovi prodotto">×</button>' +
+                    '<strong>' + money(product.price * product.qty) + '</strong>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    document.querySelectorAll('.add-cart').forEach(function (button) {
+        button.addEventListener('click', function () {
+            var element = button.closest('.product');
+            if (!element) return;
+
+            var id = element.dataset.id;
+
+            if (cart[id]) {
+                cart[id].qty++;
+            } else {
+                cart[id] = {
+                    name: element.dataset.name,
+                    price: Number(element.dataset.price),
+                    qty: 1
+                };
+            }
+
+            renderCart();
+            openCart();
+        });
+    });
+
+    document.querySelectorAll('.cart-open').forEach(function (button) {
+        button.addEventListener('click', openCart);
+    });
+
+    var closeButton = document.querySelector('.cart-close');
+    if (closeButton) closeButton.addEventListener('click', closeCart);
+
+    backdrop.addEventListener('click', closeCart);
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeCart();
+    });
+
+    var cartItems = document.getElementById('cartItems');
+
+    if (cartItems) {
+        cartItems.addEventListener('click', function (event) {
+            var button = event.target.closest('button[data-action]');
+            if (!button) return;
+
+            var id = button.dataset.id;
+            var action = button.dataset.action;
+
+            if (!cart[id]) return;
+
+            if (action === 'plus') cart[id].qty++;
+            if (action === 'minus') cart[id].qty--;
+
+            if (action === 'remove' || cart[id].qty < 1) {
+                delete cart[id];
+            }
+
+            renderCart();
+        });
+    }
+
+    document.querySelectorAll('.filter').forEach(function (button) {
+        button.addEventListener('click', function () {
+            document.querySelectorAll('.filter').forEach(function (element) {
+                element.classList.toggle('active', element === button);
+            });
+
+            products.forEach(function (product) {
+                product.hidden =
+                    button.dataset.filter !== 'all' &&
+                    product.dataset.category !== button.dataset.filter;
+            });
+        });
+    });
+
+    var checkoutButton = document.getElementById('checkoutDemo');
+
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', function () {
+            var keys = Object.keys(cart);
+            var message = document.getElementById('checkoutMessage');
+
+            if (!message) return;
+
+            message.hidden = false;
+
+            if (!keys.length) {
+                message.textContent =
+                    'Il carrello è vuoto: aggiungi un prodotto prima di creare il riepilogo.';
+                return;
+            }
+
+            var total = keys.reduce(function (sum, key) {
+                return sum + cart[key].price * cart[key].qty;
+            }, 0);
+
+            message.innerHTML =
+                '<strong>Riepilogo dimostrativo</strong><br>' +
+                keys.map(function (key) {
+                    return cart[key].name + ' × ' + cart[key].qty;
+                }).join('<br>') +
+                '<br><br><strong>Totale: ' + money(total) + '</strong>' +
+                '<br>Nessun ordine inviato e nessun pagamento richiesto.';
+        });
+    }
+})();
