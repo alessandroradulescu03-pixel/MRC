@@ -74,21 +74,32 @@ if (form) {
     });
 }
 
-// Apertura del negozio esclusivamente tramite i link dedicati
+// ===== VISTA NEGOZIO (pagina separata, senza ricaricare) =====
+
 function apriNegozio(event) {
     var negozio = document.getElementById('negozio');
-
     if (!negozio) return;
 
-    event.preventDefault();
+    if (event) event.preventDefault();
 
-    // Mostra la sezione del negozio
     negozio.hidden = false;
     negozio.removeAttribute('hidden');
+    document.body.classList.add('vista-negozio');
+
+    // Crea il pulsante "Torna al sito" una sola volta
+    if (!document.getElementById('tornaHome')) {
+        var wrap = negozio.querySelector('.w');
+        var btn = document.createElement('a');
+        btn.id = 'tornaHome';
+        btn.className = 'btn o torna-home';
+        btn.href = '#top';
+        btn.textContent = '← Torna al sito';
+        btn.addEventListener('click', chiudiNegozio);
+        wrap.insertBefore(btn, wrap.firstChild);
+    }
 
     // Chiude il menu mobile
     if (nv) nv.classList.remove('open');
-
     if (mb) {
         mb.setAttribute('aria-expanded', 'false');
         mb.textContent = '☰';
@@ -99,18 +110,44 @@ function apriNegozio(event) {
         window.history.replaceState(null, '', '#negozio');
     }
 
-    // Scorre fino al negozio dopo averlo reso visibile
-    window.requestAnimationFrame(function () {
-        negozio.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Gestisce sia "Negozio" nel menu sia "Componenti aftermarket"
+function chiudiNegozio(event) {
+    var negozio = document.getElementById('negozio');
+    if (event) event.preventDefault();
+
+    if (negozio) negozio.hidden = true;
+    document.body.classList.remove('vista-negozio');
+
+    if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, '', '#top');
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// "Negozio" nel menu e "COMPONENTI AFTERMARKET" nella galleria
 document.querySelectorAll('a[href="#negozio"]').forEach(function (link) {
     link.addEventListener('click', apriNegozio);
+});
+
+// Dal negozio, i link del menu riportano alla home e poi alla sezione scelta
+document.querySelectorAll('nav a, .logo, header .btn').forEach(function (link) {
+    var href = link.getAttribute('href');
+    if (!href || href === '#negozio' || href.charAt(0) !== '#') return;
+
+    link.addEventListener('click', function (event) {
+        if (!document.body.classList.contains('vista-negozio')) return;
+
+        event.preventDefault();
+        chiudiNegozio();
+
+        window.setTimeout(function () {
+            var target = document.querySelector(href);
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
+    });
 });
 
 // Carrello dimostrativo
@@ -297,3 +334,8 @@ document.querySelectorAll('a[href="#negozio"]').forEach(function (link) {
         });
     }
 })();
+
+// Se la pagina viene aperta direttamente con #negozio nell'indirizzo
+if (window.location.hash === '#negozio') {
+    apriNegozio();
+}
