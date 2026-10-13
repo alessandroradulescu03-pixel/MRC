@@ -138,10 +138,12 @@ function apriNegozio(event) {
 window.addEventListener('popstate', function () {
     if (window.location.hash === '#negozio') {
         mostraNegozio();
-    } else {
+    } else if (document.body.classList.contains('vista-negozio')) {
+        // Si esce dal negozio: torna alla home dove eri
         mostraHome();
         window.scrollTo({ top: posizioneHome, behavior: 'instant' });
     }
+    // Altrimenti sei già nella home (es. clic su "Lavori"): ci pensa il browser
 });
 
 // "Negozio" nel menu e "COMPONENTI AFTERMARKET" nella galleria
