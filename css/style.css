@@ -10,8 +10,6 @@
     --disp: 'Barlow Condensed', 'Arial Narrow', Impact, sans-serif;
     --body: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
     box-sizing: border-box;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
     color-scheme: dark;
 }
 
@@ -67,10 +65,11 @@ h2 {
 
 header {
     position: fixed;
-    top: env(safe-area-inset-top, 0px);
+    top: 0;
     left: 0;
     right: 0;
     z-index: 10;
+    padding-top: env(safe-area-inset-top, 0px);
     background: #0a0a0bd9;
     backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--line);
@@ -410,6 +409,36 @@ section {
     display: none;
 }
 
+.panel p {
+    margin: 0 0 14px;
+}
+
+.pl {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.pl li {
+    position: relative;
+    padding-left: 22px;
+    color: var(--muted);
+    font-size: .93rem;
+}
+
+.pl li:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: .6em;
+    width: 10px;
+    height: 3px;
+    background: var(--acc);
+    transform: skewX(-18deg);
+}
+
 /* RIQUADRO RACING CON FOTO ASPIRAZIONE/MOTORE */
 
 .spec {
@@ -503,6 +532,34 @@ section {
     color: var(--muted);
 }
 
+/* CHI SIAMO */
+
+.about {
+    background: var(--panel);
+    border-top: 1px solid var(--line);
+}
+
+.about p {
+    color: var(--muted);
+    margin: 0 0 16px;
+}
+
+.about-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.about-tags span {
+    font: 600 .7rem var(--body);
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    border: 1px solid var(--line);
+    padding: 8px 14px;
+    color: var(--acc2);
+}
+
 /* CONTATTI */
 
 .ct {
@@ -539,6 +596,55 @@ section {
     letter-spacing: .22em;
     text-transform: uppercase;
     color: #bfe3ec;
+}
+
+.map {
+    margin-top: 26px;
+    border: 1px solid #ffffff33;
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: #0e4f5f;
+}
+
+.map iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    filter: grayscale(.4) contrast(1.05);
+}
+
+/* PULSANTE WHATSAPP FISSO */
+
+.wa-float {
+    position: fixed;
+    right: 20px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    z-index: 9;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #25d366;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 10px 30px #0008;
+    transition: .2s;
+}
+
+.wa-float:hover {
+    transform: scale(1.07);
+}
+
+.wa-float svg {
+    width: 30px;
+    height: 30px;
+    fill: #fff;
+}
+
+/* IMMAGINE NON DISPONIBILE */
+
+img.img-ko {
+    object-fit: cover;
 }
 
 .fm {
@@ -1008,7 +1114,7 @@ body.vista-negozio #negozio {
     nav {
         display: none;
         position: absolute;
-        top: 68px;
+        top: 100%;
         left: 0;
         right: 0;
         flex-direction: column;
@@ -1128,4 +1234,10 @@ body.vista-negozio #negozio {
     html {
         scroll-behavior: auto;
     }
+}
+
+/* WHATSAPP: NASCOSTO QUANDO IL CARRELLO È APERTO */
+
+body:has(.cart-drawer.open) .wa-float {
+    display: none;
 }

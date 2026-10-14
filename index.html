@@ -5,8 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="MRC Automotive, Grumello del Monte: componenti racing, preparazioni, officina con diagnostica, pneumatici, compravendita e importazione auto.">
 <title>MRC Automotive — Racing parts, preparazioni, officina</title>
+<meta name="theme-color" content="#0a0a0b">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="MRC Automotive">
+<meta property="og:title" content="MRC Automotive — Pronta per la pista. Pronta per la strada.">
+<meta property="og:description" content="Componenti racing, preparazioni, officina con diagnostica, pneumatici e compravendita auto a Grumello del Monte (BG).">
+<meta property="og:image" content="https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&h=630&q=80">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0a0b'/%3E%3Cpath d='M20 12h12L24 52H12z' fill='%2316758b'/%3E%3Cpath d='M38 12h12l-8 40H30z' fill='%235fc3d9'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Inter:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=4">
 </head>
 <body>
 <header>
@@ -18,6 +27,7 @@
             <a href="#lavori">Lavori</a>
             <a href="#negozio">Negozio</a>
             <a href="#metodo">Metodo</a>
+            <a href="#chi-siamo">Chi siamo</a>
             <a href="#contatti">Contatti</a>
         </nav>
         <a class="btn" href="#contatti">Richiedi info</a>
@@ -26,7 +36,7 @@
 </header>
 
 <main id="top">
-    <section class="hero" style="padding-block:120px 70px">
+    <section class="hero">
         <div class="w hero-in">
             <div class="ey">Grumello del Monte · Bergamo</div>
             <h1>Pronta per<br>la <em>pista.</em><br>Pronta per la strada.</h1>
@@ -103,8 +113,22 @@
                     <button class="tab" role="tab" aria-selected="true" data-t="0">Nuovi</button>
                     <button class="tab" role="tab" aria-selected="false" data-t="1">Usati</button>
                 </div>
-                <div class="panel" id="p0">Componenti nuovi per progetti dove affidabilità e prestazioni non ammettono compromessi.</div>
-                <div class="panel" id="p1" hidden>Componenti usati per chi vuole completare il progetto con un budget più accessibile.</div>
+                <div class="panel" id="p0">
+                    <p>Componenti nuovi per progetti dove affidabilità e prestazioni non ammettono compromessi.</p>
+                    <ul class="pl">
+                        <li>Ricerca del componente giusto per la tua auto</li>
+                        <li>Verifica di compatibilità prima dell'ordine</li>
+                        <li>Possibilità di montaggio direttamente in officina</li>
+                    </ul>
+                </div>
+                <div class="panel" id="p1" hidden>
+                    <p>Componenti usati per chi vuole completare il progetto con un budget più accessibile.</p>
+                    <ul class="pl">
+                        <li>Pezzi controllati prima della vendita</li>
+                        <li>Soluzione ideale per auto da pista e progetti in corso</li>
+                        <li>Valutazione anche dei tuoi componenti usati</li>
+                    </ul>
+                </div>
             </div>
 
             <div class="spec rv">
@@ -130,7 +154,7 @@
             <div class="sh">
                 <div>
                     <div class="ey">MRC Performance Store · Demo</div>
-                    <h2>Componenti<br>per la tua BMW.</h2>
+                    <h2>Componenti<br>per la tua auto.</h2>
                 </div>
                 <p>Esplora una selezione dimostrativa di componenti aftermarket. Aggiungi i prodotti al carrello e prepara il tuo riepilogo: nessun pagamento viene effettuato.</p>
             </div>
@@ -148,18 +172,18 @@
             </div>
 
             <div class="products">
-                <article class="product" data-category="cerchi" data-id="bbs" data-name="Cerchi BBS FI-R 20”" data-price="1250">
+                <article class="product" data-category="cerchi" data-id="bbs" data-name="Cerchi forgiati 20”" data-price="1250">
                     <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=900&q=85" alt="Cerchio sportivo e dettaglio ruota">
                     <div class="prod-body">
                         <span class="tag">CERCHI</span>
-                        <h3>Cerchi BBS FI-R 20”</h3>
+                        <h3>Cerchi forgiati 20”</h3>
                         <p>Cerchio in lega dal design sportivo, pensato per valorizzare il look della vettura. Compatibilità da verificare.</p>
                         <div class="prod-foot"><strong>€ 1.250,00</strong><button class="add-cart">Aggiungi +</button></div>
                     </div>
                 </article>
 
-                <article class="product" data-category="freni" data-id="brembo" data-name="Kit freni sportivi" data-price="1180">
-                    <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=900&q=85" alt="Componenti meccanici e impianto frenante">
+                <article class="product" data-category="freni" data-id="freni" data-name="Kit freni sportivi" data-price="1180">
+                    <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=900&q=85" alt="Componenti meccanici e impianto frenante">
                     <div class="prod-body">
                         <span class="tag">FRENANTE</span>
                         <h3>Kit freni sportivi</h3>
@@ -169,7 +193,7 @@
                 </article>
 
                 <article class="product" data-category="scarichi" data-id="exhaust" data-name="Scarico sportivo" data-price="1050">
-                    <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&w=900&q=85" alt="Componenti di scarico automotive">
+                    <img src="https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=900&q=85" alt="Componenti di scarico automotive">
                     <div class="prod-body">
                         <span class="tag">SCARICHI</span>
                         <h3>Scarico sportivo</h3>
@@ -189,7 +213,7 @@
                 </article>
 
                 <article class="product" data-category="motore" data-id="intercooler" data-name="Intercooler maggiorato" data-price="680">
-                    <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=900&q=85" alt="Componenti meccanici per preparazione motore">
+                    <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=900&q=85" alt="Componenti meccanici per preparazione motore">
                     <div class="prod-body">
                         <span class="tag">MOTORE</span>
                         <h3>Intercooler maggiorato</h3>
@@ -199,7 +223,7 @@
                 </article>
 
                 <article class="product" data-category="motore" data-id="intake" data-name="Aspirazione performance" data-price="390">
-                    <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=900&q=85" alt="Lavorazione meccanica in officina">
+                    <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=900&q=85" alt="Lavorazione meccanica in officina">
                     <div class="prod-body">
                         <span class="tag">ASPIRAZIONE</span>
                         <h3>Aspirazione performance</h3>
@@ -233,11 +257,11 @@
         <div class="w">
             <div class="sh rv">
                 <div><div class="ey">Lavori</div><h2>Auto che<br>parlano da sole.</h2></div>
-                <p>Immagini indicative per la demo: da sostituire con i lavori reali di MRC.</p>
+                <p>Preparazioni, interventi in officina e auto pronte a tornare in strada: ogni progetto racconta la sua storia.</p>
             </div>
             <div class="gal">
                 <figure class="rv">
-                    <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1200&q=88" alt="Lavorazione meccanica e preparazione in officina" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=1200&q=88" alt="Auto sportiva preparata" loading="lazy">
                     <figcaption>Preparazioni motore</figcaption>
                 </figure>
                 <figure class="rv">
@@ -245,7 +269,7 @@
                     <figcaption><a class="shop-badge-link" href="#negozio">COMPONENTI AFTERMARKET</a></figcaption>
                 </figure>
                 <figure class="rv">
-                    <img src="https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1200&q=88" alt="Diagnostica e componenti in officina" loading="lazy">
+                    <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=88" alt="Auto sportiva dopo l'intervento in officina" loading="lazy">
                     <figcaption>Diagnostica e officina</figcaption>
                 </figure>
                 <figure class="rv">
@@ -267,6 +291,22 @@
         </div>
     </section>
 
+    <section id="chi-siamo" class="about">
+        <div class="w split">
+            <div class="rv">
+                <div class="ey">Chi siamo</div>
+                <h2>Nati dalla<br>passione per le corse.</h2>
+            </div>
+            <div class="rv">
+                <p>Dietro MRC Automotive c'è lo spirito del Mosi Racing Club: persone che l'auto la vivono ogni giorno, in officina e in pista.</p>
+                <p>Per questo trattiamo ogni vettura come se fosse la nostra, dalla manutenzione di tutti i giorni fino alle preparazioni più spinte. Ascoltiamo, spieghiamo cosa serve e lavoriamo con trasparenza.</p>
+                <div class="about-tags">
+                    <span>Passione racing</span><span>Diagnostica</span><span>Trasparenza</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="ct" id="contatti">
         <div class="w ctb">
             <div>
@@ -277,7 +317,9 @@
                     <div><small>Indirizzo</small><a href="https://www.google.com/maps/search/?api=1&query=Via+Leonardo+Da+Vinci+8+Grumello+del+Monte" target="_blank" rel="noopener">Via Leonardo Da Vinci, 8 · 24064 Grumello del Monte (BG)</a></div>
                     <div><small>Telefono</small><a href="tel:+393497861240">349 786 1240</a></div>
                     <div><small>Instagram</small><a href="https://www.instagram.com/mosiracingclub/" target="_blank" rel="noopener">@mosiracingclub</a></div>
-                    <div><small>Orari</small>Da inserire</div>
+                </div>
+                <div class="map">
+                    <iframe title="Mappa MRC Automotive" src="https://maps.google.com/maps?q=Via%20Leonardo%20Da%20Vinci%208%2C%2024064%20Grumello%20del%20Monte%20BG&z=15&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
             <form class="fm" id="f">
@@ -307,6 +349,10 @@
     </div>
 </footer>
 
-<script src="js/main.js?v=3"></script>
+<a class="wa-float" href="https://wa.me/393497861240?text=Ciao%20MRC%2C%20vorrei%20informazioni" target="_blank" rel="noopener" aria-label="Scrivici su WhatsApp">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3C8.8 3 3 8.7 3 15.8c0 2.5.7 4.9 2 6.9L3 29l6.5-2c2 1.1 4.2 1.6 6.5 1.6 7.2 0 13-5.7 13-12.8S23.2 3 16 3zm0 23.3c-2 0-4-.6-5.7-1.6l-.4-.2-3.9 1.2 1.2-3.7-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.8 0-5.9 4.9-10.6 10.8-10.6s10.8 4.8 10.8 10.6S21.9 26.3 16 26.3zm5.9-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.4-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.4.3-.6.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.7s1.2 3.2 1.4 3.4c.2.2 2.4 3.6 5.8 5 .8.3 1.4.5 1.9.7.8.3 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.1-.3-.2-.6-.4z"/></svg>
+</a>
+
+<script src="js/main.js?v=4"></script>
 </body>
 </html>

@@ -1,3 +1,28 @@
+// Immagini: se una foto non si carica, mostra un riquadro grafico MRC al posto dell'icona rotta
+(function () {
+    var ricambio = 'data:image/svg+xml,' + encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">' +
+        '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+        '<stop offset="0" stop-color="#1a1a1d"/><stop offset="1" stop-color="#0e4f5f"/></linearGradient></defs>' +
+        '<rect width="800" height="500" fill="url(#g)"/>' +
+        '<path d="M330 170h50l-40 160h-50z" fill="#16758b"/>' +
+        '<path d="M410 170h50l-40 160h-50z" fill="#5fc3d9"/>' +
+        '</svg>'
+    );
+
+    document.querySelectorAll('img').forEach(function (img) {
+        function sostituisci() {
+            if (img.dataset.ko) return;
+            img.dataset.ko = '1';
+            img.classList.add('img-ko');
+            img.src = ricambio;
+        }
+
+        img.addEventListener('error', sostituisci);
+        if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) sostituisci();
+    });
+})();
+
 var mb = document.getElementById('mb');
 var nv = document.getElementById('nv');
 
@@ -67,10 +92,14 @@ if (form) {
             '. Mi serve: ' + data.get('t') +
             '. ' + (data.get('m') || '');
 
-        window.open(
-            'https://wa.me/393497861240?text=' + encodeURIComponent(messaggio),
-            '_blank'
-        );
+        var url = 'https://wa.me/393497861240?text=' + encodeURIComponent(messaggio);
+
+        // Da telefono apre direttamente l'app, da computer usa una nuova scheda
+        if (window.matchMedia('(pointer: coarse)').matches) {
+            window.location.href = url;
+        } else {
+            window.open(url, '_blank', 'noopener');
+        }
     });
 }
 
